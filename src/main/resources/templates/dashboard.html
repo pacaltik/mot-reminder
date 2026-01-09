@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .logout { color: red; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2>My Dashboard</h2>
+    <div>
+        <span>Logged in as: <b th:text="${user.email}"></b></span>
+        |
+        <a href="/logout" class="logout">Logout</a>
+    </div>
+</header>
+
+<div style="margin-top: 30px;">
+    <h3>My Cars</h3>
+    <p>You haven't added any cars yet.</p>
+    <button onclick="alert('Coming soon!')">Add New Car</button>
+</div>
+
+</body>
+</html>

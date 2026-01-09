@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - MOT Reminder</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .form-container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
+        h2 { text-align: center; color: #333; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #2980b9; }
+        .error { color: red; text-align: center; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Log In</h2>
+
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form action="/login" method="post">
+        <input type="email" name="email" required placeholder="Email" />
+        <input type="password" name="password" required placeholder="Password" />
+        <button type="submit">Log In</button>
+    </form>
+
+    <p style="text-align: center; margin-top: 15px;">
+        <a href="/register" style="text-decoration: none; color: #666;">Need an account? Register</a>
+    </p>
+</div>
+
+</body>
+</html>

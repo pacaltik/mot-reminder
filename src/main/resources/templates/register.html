@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - MOT Reminder</title>
+    <style>
+        /* Basic styling for the form */
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .form-container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
+        h2 { text-align: center; color: #333; }
+        label { display: block; margin-top: 10px; color: #666; }
+        input { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; font-size: 16px; }
+        button:hover { background-color: #219150; }
+        .links { text-align: center; margin-top: 15px; }
+        .links a { text-decoration: none; color: #3498db; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Create Account</h2>
+
+    <div th:if="${error}" style="color: red; text-align: center; margin-bottom: 10px;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+
+        <label>Email Address</label>
+        <input type="email" th:field="*{email}" required placeholder="name@example.com"/>
+
+        <label>Password</label>
+        <input type="password" th:field="*{password}" required placeholder="Create a password"/>
+
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="links">
+        <a href="/">Back to Home</a>
+    </div>
+</div>
+
+</body>
+</html>
