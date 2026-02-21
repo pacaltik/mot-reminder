@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Car</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+    input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+    button { background-color: #27ae60; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+<h2>Add New Car</h2>
+
+<form action="/add-car" method="post">
+  <label>License Plate (SPZ):</label>
+  <input type="text" name="licensePlate" placeholder="e.g. 1A2 3456" required>
+
+  <label>MOT Expiry Date (Platnost STK):</label>
+  <input type="date" name="expiryDate" required>
+
+  <button type="submit">Save Car</button>
+  <a href="/dashboard" style="margin-left: 10px;">Cancel</a>
+</form>
+</body>
+</html>
