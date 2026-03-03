@@ -27,11 +27,13 @@
 
     <form th:action="@{/register}" th:object="${user}" method="post">
 
-        <label>Email Address</label>
-        <input type="email" th:field="*{email}" required placeholder="name@example.com"/>
+        <label for="email">Email Address</label>
+        <input type="text" id="email" th:field="*{email}" placeholder="name@example.com"/>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: #ff8400; font-size: 0.8em;"></span>
 
-        <label>Password</label>
-        <input type="password" th:field="*{password}" required placeholder="Create a password"/>
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" placeholder="Create a password"/>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: #ff8400; font-size: 0.8em;"></span>
 
         <button type="submit">Sign Up</button>
     </form>

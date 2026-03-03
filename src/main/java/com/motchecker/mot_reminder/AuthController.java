@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 
 @Controller
 public class AuthController {
@@ -28,9 +30,17 @@ public class AuthController {
 
     // 2. process the form data when user clicks "Submit"
     @PostMapping("/register")
-    public String registerUser(User user, Model model) {
+    public String registerUser(@Valid User user, BindingResult bindingResult, Model model) {
         logger.debug("Registration attempt for email: {}", user.getEmail());
 
+        // 1. Zkontrolujeme, zda formulář neporušil naše pravidla (@NotBlank, @Size...)
+        if (bindingResult.hasErrors()) {
+            logger.warn("Registration failed due to validation errors.");
+            // Pokud jsou chyby, vrátíme uživatele zpět na formulář
+            return "register";
+        }
+
+        // 2. Kontrola, zda email už neexistuje v databázi (to už znáš)
         User existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser != null) {
             logger.warn("Registration failed: Email {} is already in use.", user.getEmail());
@@ -38,8 +48,10 @@ public class AuthController {
             return "register";
         }
 
+        // 3. Uložení
         userRepository.save(user);
         logger.info("New user registered successfully: {}", user.getEmail());
+
         return "redirect:/";
     }
     // 1.show Login Page
