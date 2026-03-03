@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Add New Car</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 500px; margin: auto; }
-    input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-    button { background-color: #27ae60; color: white; padding: 10px 20px; border: none; cursor: pointer; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Add New Car</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/mot-icon.svg}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h2>Add New Car</h2>
+<div class="container">
+    <h2>Add New Car</h2>
 
-<form th:action="@{/add-car}" th:object="${car}" method="post">
+    <form th:action="@{/add-car}" th:object="${car}" method="post">
 
-  <label for="spz">License Plate (SPZ/RZ):</label>
-  <input type="text" id="spz" th:field="*{licensePlate}" placeholder="e.g. 1A2 3456" style="text-transform: uppercase;">
-  <div th:if="${#fields.hasErrors('licensePlate')}" th:errors="*{licensePlate}" style="color: red; font-size: 0.8em; margin-bottom: 10px;"></div>
+        <label for="spz">License Plate:</label>
+        <input type="text" id="spz" th:field="*{licensePlate}" placeholder="e.g. 1A2 3456"
+               style="text-transform: uppercase;">
+        <div th:if="${#fields.hasErrors('licensePlate')}" th:errors="*{licensePlate}"
+             style="color: red; font-size: 0.8em; margin-bottom: 10px;"></div>
 
-  <label for="expiryDate">MOT Expiry Date (Platnost STK):</label>
-  <input type="date" id="expiryDate" th:field="*{motExpiryDate}">
-  <div th:if="${#fields.hasErrors('motExpiryDate')}" th:errors="*{motExpiryDate}" style="color: red; font-size: 0.8em; margin-bottom: 10px;"></div>
+        <label for="expiryDate">MOT Expiry Date:</label>
+        <input type="date" id="expiryDate" th:field="*{motExpiryDate}">
+        <div th:if="${#fields.hasErrors('motExpiryDate')}" th:errors="*{motExpiryDate}"
+             style="color: red; font-size: 0.8em; margin-bottom: 10px;"></div>
 
-  <button type="submit" style="margin-top: 10px;">Save Car</button>
-  <a href="/dashboard" style="margin-left: 10px; text-decoration: none; color: #666;">Cancel</a>
-</form>
+        <button class="btn btn-primary" type="submit" style="margin-top: 10px;">Save Car</button>
+        <a href="/dashboard" style="margin-left: 10px; text-decoration: none; color: #666;">Cancel</a>
+    </form>
+</div>
 </body>
 </html>

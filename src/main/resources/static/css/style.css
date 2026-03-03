@@ -1,0 +1,146 @@
+/* global */
+:root {
+    --primary-color: #0d6efd;      /* Hlavní modrá (tlačítka, odkazy) */
+    --primary-hover: #0b5ed7;
+    --bg-color: #f8f9fa;           /* Světle šedé pozadí celé stránky */
+    --text-color: #333333;         /* Hlavní barva textu */
+    --surface-color: #ffffff;      /* Bílé pozadí pro formuláře a tabulky */
+    --border-color: #dee2e6;
+    --danger-color: #dc3545;       /* Červená na mazání/chyby */
+    --success-color: #198754;      /* Zelená pro úspěch/platnou STK */
+}
+
+/* default */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 2rem;
+}
+
+/* main container */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--surface-color);
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+h1, h2 {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* buttons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-danger:hover {
+    background-color: #b02a37;
+}
+
+/* table*/
+.mot-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.mot-table th {
+    background-color: var(--bg-color);
+    padding: 1rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.mot-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.mot-table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+.badge-valid { background-color: #d1e7dd; color: #0f5132; }
+.badge-expired { background-color: #f8d7da; color: #842029; }
+
+/* errors */
+.error-msg { color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem; }
+.alert-error { background-color: #f8d7da; color: #842029; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
