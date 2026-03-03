@@ -3,76 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .logout { color: red; text-decoration: none; }
-    </style>
+    <link rel="icon" type="image/svg+xml" th:href="@{/mot-icon.svg}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div class="container" style="max-width: 1000px;">
 
-<header>
-    <h2>My Dashboard</h2>
-    <div>
-        <span>Logged in as: <b th:text="${user.email}"></b></span>
-        |
-        <a href="/logout" class="logout">Logout</a>
-    </div>
-</header>
-
-<div style="margin-top: 30px;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>My Cars</h3>
-        <a href="/add-car" style="background: #3498db; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">+ Add Car</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem;">
+        <h1 style="border: none; margin: 0;">My Garage</h1>
+        <div style="font-size: 1.1rem;">
+            <span style="color: #666;">Welcome,</span>
+            <strong th:text="${user.email}"></strong> |
+            <a th:href="@{/logout}" style="color: var(--danger-color); text-decoration: none; font-weight: bold; margin-left: 10px;">Logout</a>
+        </div>
     </div>
 
-    <hr>
+    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--text-color);">Add New Car</h3>
 
-    <p th:if="${cars.empty}">You don't have any cars monitored yet.</p>
+        <form th:action="@{/add-car}" method="post" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                <label>License Plate:
+                <input type="text" name="licensePlate" placeholder="e.g. 1A2 3456" required>
+                </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                <label>MOT Expiry Date:
+                <input type="date" name="motExpiryDate" required>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="height: 45px;">Add Car</button>
+        </form>
+    </div>
 
-    <table th:if="${!cars.empty}" style="width: 100%; text-align: left; border-collapse: collapse;">
-        <thead>
-        <tr style="background: #eee;">
-            <th style="padding: 10px;">License Plate</th>
-            <th style="padding: 10px;">Expires On</th>
-            <th style="padding: 10px;">Status</th>
-            <th style="padding: 10px;">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="car : ${cars}" style="border-bottom: 1px solid #ddd;">
-            <td style="padding: 10px;">
-                <b th:text="${car.licensePlate}"></b>
-            </td>
+    <div th:if="${not #lists.isEmpty(cars)}">
+        <table class="mot-table">
+            <thead>
+            <tr>
+                <th>License Plate</th>
+                <th>MOT Expiry Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="car : ${cars}">
+                <td style="font-weight: bold; letter-spacing: 1px;" th:text="${car.licensePlate}"></td>
+                <td th:text="${#temporals.format(car.motExpiryDate, 'dd.MM.yyyy')}"></td>
+                <td>
+                    <span th:if="${car.status == 'EXPIRED'}" class="badge badge-expired">EXPIRED</span>
+                    <span th:if="${car.status == 'VALID'}" class="badge badge-valid">VALID</span>
+                </td>
+                <td>
+                    <form th:action="@{/delete-car}" method="post" style="display:inline;">
+                        <input type="hidden" name="carId" th:value="${car.id}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-            <td style="padding: 10px;" th:text="${car.motExpiryDate}"></td>
+    <div th:if="${#lists.isEmpty(cars)}" style="text-align: center; padding: 3rem 1rem; color: #6c757d; background-color: #f8f9fa; border-radius: 8px; border: 2px dashed var(--border-color);">
+        <h3 style="margin-bottom: 0.5rem; color: var(--text-color);">Your garage is empty</h3>
+        <p>Add your first car using the form above to start tracking its MOT.</p>
+    </div>
 
-            <td style="padding: 10px;">
-                        <span th:if="${car.motExpiryDate.isBefore(T(java.time.LocalDate).now())}"
-                              style="color: red; font-weight: bold;">
-                            EXPIRED!
-                        </span>
-
-                <span th:if="${!car.motExpiryDate.isBefore(T(java.time.LocalDate).now())}"
-                      style="color: green; font-weight: bold;">
-                            Valid
-                        </span>
-            </td>
-
-            <td style="padding: 10px;">
-                <form action="/delete-car" method="post" onsubmit="return confirm('Are you sure?');">
-                    <input type="hidden" name="carId" th:value="${car.id}" />
-                    <button type="submit" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 </div>
-
-</body>
-</html>
 </body>
 </html>
