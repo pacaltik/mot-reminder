@@ -8,9 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -18,7 +22,6 @@ public class AuthController {
     // 1. show the registration form HTML
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        // create an empty User object to bind form data to
         model.addAttribute("user", new User());
         return "register";
     }
@@ -26,20 +29,17 @@ public class AuthController {
     // 2. process the form data when user clicks "Submit"
     @PostMapping("/register")
     public String registerUser(User user, Model model) {
-        // 1. check if user already exists
-        User existingUser = userRepository.findByEmail(user.getEmail());
+        logger.debug("Registration attempt for email: {}", user.getEmail());
 
+        User existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser != null) {
-            // if exists, add an error message to the model
+            logger.warn("Registration failed: Email {} is already in use.", user.getEmail());
             model.addAttribute("error", "An account with this email already exists.");
-            // Return back to the registration form instead of redirecting
             return "register";
         }
 
-        // 2. if valid, save to database
         userRepository.save(user);
-
-        // 3. redirect to home (success)
+        logger.info("New user registered successfully: {}", user.getEmail());
         return "redirect:/";
     }
     // 1.show Login Page
@@ -51,17 +51,14 @@ public class AuthController {
     // 2. process Login
     @PostMapping("/login")
     public String loginUser(String email, String password, HttpSession session, Model model) {
-        // find user by email
         User user = userRepository.findByEmail(email);
 
-        // check if user exists AND password matches
-        // (note: In a real app, use BCrypt to check encrypted passwords!)
         if (user != null && user.getPassword().equals(password)) {
-            // SUCCESS: store user in the session
             session.setAttribute("loggedInUser", user);
+            logger.info("User logged in successfully: {}", email);
             return "redirect:/dashboard";
         } else {
-            // FAILURE: Show error
+            logger.warn("Failed login attempt for email: {}", email);
             model.addAttribute("error", "Invalid email or password");
             return "login";
         }
@@ -70,7 +67,11 @@ public class AuthController {
     // 3. Logout
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // clear the session
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user != null) {
+            logger.info("User logged out: {}", user.getEmail());
+        }
+        session.invalidate();
         return "redirect:/";
     }
 }

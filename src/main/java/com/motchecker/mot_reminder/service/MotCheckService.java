@@ -5,12 +5,16 @@ import com.motchecker.mot_reminder.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class MotCheckService {
+
+    private static final Logger logger = LoggerFactory.getLogger(MotCheckService.class);
+
 
     @Autowired
     private CarRepository carRepository;
@@ -18,43 +22,42 @@ public class MotCheckService {
     @Autowired 
     private EmailService emailService;
 
-    // this runs automatically based on the cron expression
-    // "0 * * * * *" = run every minute (for testing purposes)
+    // "0 * * * * *" = run every minute (for testing)
     // "0 0 9 * * *" = run every day at 9:00 AM (for real app)
     @Scheduled(cron = "0 0 9 * * *")
     public void checkCarsForExpiry() {
-        System.out.println("--------------------------------------------------");
-        System.out.println("STARTING A CAR CHECK...");
+        logger.info("--------------------------------------------------");
+        logger.info("STARTING A CAR CHECK...");
 
         List<Car> allCars = carRepository.findAll();
         LocalDate today = LocalDate.now();
         LocalDate warningDate = today.plusDays(30);
 
-        System.out.println("Today is: " + today);
-        System.out.println("Finding cars with expiration: " + warningDate);
-        System.out.println("Number of cars: " + allCars.size());
+        logger.info("Today is: " + today);
+        logger.info("Finding cars with expiration: " + warningDate);
+        logger.info("Number of cars: " + allCars.size());
 
         for (Car car : allCars) {
-            System.out.println(" -> Checking car: " + car.getLicensePlate() + ", expiration: " + car.getMotExpiryDate());
+            logger.info(" -> Checking car: " + car.getLicensePlate() + ", expiration: " + car.getMotExpiryDate());
 
             // comparison
             if (car.getMotExpiryDate().isEqual(warningDate)) {
-                System.out.println("    !!! MATCH FOUND! Trying to send email on: " + car.getUser().getEmail());
+                logger.info("    !!! MATCH FOUND! Trying to send email on: " + car.getUser().getEmail());
 
                 try {
                     String subject = "MOT notification: " + car.getLicensePlate();
                     String body = "Hello, your car's MOT is about to expire. " + car.getLicensePlate();
 
                     emailService.sendEmail(car.getUser().getEmail(), subject, body);
-                    System.out.println("    >>> Email was succesfully sent.");
+                    logger.info("    >>> Email was succesfully sent.");
                 } catch (Exception e) {
-                    System.out.println("    !!! Email sending error: " + e.getMessage());
-                    e.printStackTrace(); // error quote
+                    // logger use
+                    logger.error("Chyba při odesílání emailu pro auto {}: {}", car.getLicensePlate(), e.getMessage(), e);
                 }
             } else {
-                System.out.println("  (this car isn't expired yet)");
+                logger.info("  (this car isn't expired yet)");
             }
         }
-        System.out.println("--------------------------------------------------");
+        logger.info("--------------------------------------------------");
     }
 }
