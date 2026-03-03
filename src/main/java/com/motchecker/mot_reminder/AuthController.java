@@ -2,24 +2,26 @@ package com.motchecker.mot_reminder;
 
 import com.motchecker.mot_reminder.model.User;
 import com.motchecker.mot_reminder.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public AuthController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // 1. show the registration form HTML
     @GetMapping("/register")
@@ -33,14 +35,11 @@ public class AuthController {
     public String registerUser(@Valid User user, BindingResult bindingResult, Model model) {
         logger.debug("Registration attempt for email: {}", user.getEmail());
 
-        // 1. Zkontrolujeme, zda formulář neporušil naše pravidla (@NotBlank, @Size...)
         if (bindingResult.hasErrors()) {
             logger.warn("Registration failed due to validation errors.");
-            // Pokud jsou chyby, vrátíme uživatele zpět na formulář
             return "register";
         }
 
-        // 2. Kontrola, zda email už neexistuje v databázi (to už znáš)
         User existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser != null) {
             logger.warn("Registration failed: Email {} is already in use.", user.getEmail());
@@ -48,7 +47,6 @@ public class AuthController {
             return "register";
         }
 
-        // 3. Uložení
         userRepository.save(user);
         logger.info("New user registered successfully: {}", user.getEmail());
 

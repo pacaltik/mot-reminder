@@ -17,7 +17,7 @@ public class Car {
     private Long id;
 
     @NotBlank(message = "License plate is required")
-    // Regex: Začíná písmenem/číslem, obsahuje písmena/čísla/mezery/pomlčky a má délku 5-10 znaků
+    // Regex
     @Pattern(regexp = "^[A-Z0-9][A-Z0-9 \\-]{3,8}[A-Z0-9]$", message = "Invalid format. Use uppercase letters, numbers, spaces, or dashes (e.g., 1A1 1234)")
     @Column(nullable = false)
     private String licensePlate;

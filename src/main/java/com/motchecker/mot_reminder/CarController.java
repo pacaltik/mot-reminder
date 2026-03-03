@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,8 +20,11 @@ public class CarController {
 
     private static final Logger logger = LoggerFactory.getLogger(CarController.class);
 
-    @Autowired
-    private CarRepository carRepository;
+    private final CarRepository carRepository;
+
+    public CarController(CarRepository carRepository) {
+        this.carRepository = carRepository;
+    }
 
     // 1. show the "Add Car" form
     @GetMapping("/add-car")
@@ -30,7 +32,7 @@ public class CarController {
         if (session.getAttribute("loggedInUser") == null) {
             return "redirect:/login";
         }
-        model.addAttribute("car", new Car()); // Prázdné auto pro formulář
+        model.addAttribute("car", new Car());
         return "add-car";
     }
 
@@ -40,13 +42,12 @@ public class CarController {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) return "redirect:/login";
 
-        // Pokud SPZ nebo datum nesplňují pravidla, vrať uživatele zpět na formulář
+
         if (bindingResult.hasErrors()) {
             logger.warn("User {} failed to add a car due to validation errors.", user.getEmail());
             return "add-car";
         }
 
-        // Převedeme SPZ na velká písmena (pro jistotu, kdyby uživatel zadal malá)
         car.setLicensePlate(car.getLicensePlate().toUpperCase());
         car.setUser(user);
 
