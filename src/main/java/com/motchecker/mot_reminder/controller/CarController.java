@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CarController {
@@ -32,17 +34,32 @@ public class CarController {
     @PostMapping("/add-car")
     public String addCar(@Valid @ModelAttribute("car") CarRequestDTO carRequestDTO,
                          BindingResult bindingResult,
-                         HttpSession session) {
+                         HttpSession session,
+                         RedirectAttributes redirectAttributes) {
 
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) return "redirect:/login";
 
+        // input error
         if (bindingResult.hasErrors()) {
-            return "add-car";
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid input data. Please check your form.");
+            return "redirect:/dashboard"; // Vracíme ho zpět na dashboard s chybou
         }
 
-        // The Controller delegates all business logic to the Service
-        carService.addCar(carRequestDTO, user.getId());
+        try {
+            carService.addCar(carRequestDTO, user.getId());
+
+            // success
+            redirectAttributes.addFlashAttribute("successMessage", "Car successfully added to your garage!");
+
+        } catch (DataIntegrityViolationException e) {
+            // license plate error
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: A car with this license plate already exists!");
+
+        } catch (RuntimeException e) {
+            // other errors
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
+        }
 
         return "redirect:/dashboard";
     }

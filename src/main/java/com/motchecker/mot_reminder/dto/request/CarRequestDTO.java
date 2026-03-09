@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @SuppressWarnings("unused")
 public class CarRequestDTO {
 
+    @SuppressWarnings("RegExpSimplifiable")
     @NotBlank(message = "License plate is required")
     @Pattern(regexp = "^([a-zA-Z]{3}|[0-9][a-zA-Z][0-9])[ ]?[0-9]{2}[- ]?[0-9]{2}$",
             message = "Invalid format. Use formats like PUN1234, 1A2 3456, pun 12-34")

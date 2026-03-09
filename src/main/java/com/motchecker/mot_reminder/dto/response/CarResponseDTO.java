@@ -1,12 +1,14 @@
 package com.motchecker.mot_reminder.dto.response;
 
+import com.motchecker.mot_reminder.enums.CarStatus;
+
 import java.time.LocalDate;
 @SuppressWarnings("unused")
 public class CarResponseDTO {
     private Long id;
     private String licensePlate;
     private LocalDate motExpiryDate;
-    private String status; // e.g., "VALID" or "EXPIRED" - calculated in Service!
+    private CarStatus status; // e.g., "VALID" or "EXPIRED" - calculated in Service!
 
     public Long getId() {
         return id;
@@ -32,11 +34,16 @@ public class CarResponseDTO {
         this.motExpiryDate = motExpiryDate;
     }
 
-    public String getStatus() {
+    public CarStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(CarStatus status) {
         this.status = status;
+    }
+
+    public long getDaysRemaining() {
+        if (motExpiryDate == null) return 0;
+        return java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDate.now(), motExpiryDate);
     }
 }

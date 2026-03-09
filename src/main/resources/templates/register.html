@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Register - MOT Reminder</title>
-    <link rel="icon" type="image/svg+xml" th:href="@{/mot-icon.svg}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/mot-icon.svg}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="container">
     <h2>Create an Account</h2>
 
-    <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+    <div th:if="${error}" class="alert-error" th:text="${error}"><span th:text="${error}"></span></div>
 
     <form th:action="@{/register}" th:object="${user}" method="post">
 

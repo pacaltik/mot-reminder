@@ -1,13 +1,13 @@
 /* global */
 :root {
-    --primary-color: #0d6efd;      /* Hlavní modrá (tlačítka, odkazy) */
+    --primary-color: #0d6efd;
     --primary-hover: #0b5ed7;
-    --bg-color: #f8f9fa;           /* Světle šedé pozadí celé stránky */
-    --text-color: #333333;         /* Hlavní barva textu */
-    --surface-color: #ffffff;      /* Bílé pozadí pro formuláře a tabulky */
+    --bg-color: #e7f1ff;
+    --text-color: #333333;
+    --surface-color: #ffffff;
     --border-color: #dee2e6;
-    --danger-color: #dc3545;       /* Červená na mazání/chyby */
-    --success-color: #198754;      /* Zelená pro úspěch/platnou STK */
+    --danger-color: #dc3545;
+    --success-color: #198754;
 }
 
 /* default */
@@ -57,13 +57,16 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="date"] {
+input[type="date"],
+select {
     width: 100%;
+    height: 3rem;
     padding: 0.75rem;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.2s;
+    background-color: var(--surface-color);
 }
 
 input:focus {
@@ -84,11 +87,18 @@ input:focus {
     text-align: center;
     text-decoration: none;
     transition: all 0.2s;
+    vertical-align: center;
 }
 
 .btn-primary {
     background-color: var(--primary-color);
     color: white;
+    height: 3rem;
+    margin-bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
 }
 
 .btn-primary:hover {
@@ -112,25 +122,83 @@ input:focus {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    table-layout: fixed; /* symmetric */
+    background-color: #fff;
+    margin-bottom: 2rem;
+}
+
+.mot-table thead tr {
+    height: 60px;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .mot-table th {
-    background-color: var(--bg-color);
-    padding: 1rem;
-    font-size: 0.85rem;
+    text-align: center;
+    vertical-align: middle;
     text-transform: uppercase;
-    border-bottom: 2px solid var(--border-color);
+    font-size: 0.85rem;
+    color: #666;
+    padding: 0 10px;
+}
+
+.mot-table tbody tr:hover {
+    background-color: #fafafa;
 }
 
 .mot-table td {
     padding: 1rem;
     border-bottom: 1px solid var(--border-color);
     vertical-align: middle;
+    text-align: center;
 }
 
 .mot-table tbody tr:hover {
     background-color: var(--bg-color);
 }
+
+.days-badge {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    min-width: 100px;
+    text-align: center;
+    line-height: 1;
+    color: white;
+}
+
+/* Status Badges */
+.status-pill {
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: 1px solid;
+    line-height: 1;
+}
+
+.status-passed { color: #27ae60; font-weight: bold; }
+.status-failed { color: #e74c3c; font-weight: bold; }
+
+/* --- History --- */
+.history-title {
+    margin: 2.5rem 0 1.5rem 0;
+    color: var(--text-color);
+}
+
+.notes-text {
+    font-style: italic;
+    color: #666;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bg-danger { background-color: #ff4d4d; }
+.bg-warning { background-color: #ffa500; }
+.bg-success { background-color: #2ecc71; }
 
 .badge {
     padding: 6px 12px;
@@ -139,6 +207,8 @@ input:focus {
     font-weight: bold;
 }
 .badge-valid { background-color: #d1e7dd; color: #0f5132; }
+.badge-expiring-month { background-color: #ffe8cc; color: #c05621; } /* Orange for month */
+.badge-expiring-week { background-color: #fff3cd; color: #856404; } /* Yellow for week */
 .badge-expired { background-color: #f8d7da; color: #842029; }
 
 /* errors */

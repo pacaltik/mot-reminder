@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - MOT Reminder</title>
-    <link rel="icon" type="image/svg+xml" th:href="@{/mot-icon.svg}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/mot-icon.svg}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -12,7 +12,11 @@
     <h2>Login to MOT Reminder</h2>
 
     <div th:if="${error}" class="alert-error" th:text="${error}"></div>
-
+    <!--/*@thymesVar id="successMessage" type=""*/-->
+    <div th:if="${successMessage}" class="badge badge-valid">
+        <span th:text="${successMessage}"></span>
+    </div>
+    
     <form th:action="@{/login}" method="post">
 
         <div class="form-group">

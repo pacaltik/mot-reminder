@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link rel="icon" type="image/svg+xml" th:href="@{/mot-icon.svg}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/mot-icon.svg}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -39,23 +39,37 @@
     <div th:if="${not #lists.isEmpty(cars)}">
         <table class="mot-table">
             <thead>
-            <tr>
+            <tr style="height: 50px; background: #f8f9fa;">
                 <th>License Plate</th>
-                <th>MOT Expiry Date</th>
-                <th>Status</th>
+                <th>Expiry Date</th>
+                <th>Days Left</th> <th>Status</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="car : ${cars}">
-                <td style="font-weight: bold; letter-spacing: 1px;" th:text="${car.licensePlate}"></td>
+            <tr th:each="car : ${cars}" style="height: 60px; border-bottom: 1px solid #eee;">
+                <td style="font-weight: bold;" th:text="${car.licensePlate}"></td>
                 <td th:text="${#temporals.format(car.motExpiryDate, 'dd.MM.yyyy')}"></td>
+
                 <td>
-                    <span th:if="${car.status == 'EXPIRED'}" class="badge badge-expired">EXPIRED</span>
-                    <span th:if="${car.status == 'VALID'}" class="badge badge-valid">VALID</span>
+                    <div th:with="days=${car.getDaysRemaining()}"
+                         th:style="'display: inline-block; padding: 5px 12px; border-radius: 4px; font-weight: bold; min-width: 80px; text-align: center; ' +
+                               (${days <= 0} ? 'background-color: #ff4d4d; color: white;' :
+                               (${days <= 30} ? 'background-color: #ffa500; color: white;' : 'background-color: #2ecc71; color: white;'))">
+                        <span th:text="${days > 0 ? days + ' days' : 'EXPIRED'}"></span>
+                    </div>
+                </td>
+
+                <td>
+                <span th:class="${car.status.name() == 'VALID' ? 'badge-valid' : 
+                            (car.status.name() == 'EXPIRING_IN_MONTH' ? 'badge-expiring-month' : 
+                            (car.status.name() == 'EXPIRING_IN_WEEK' ? 'badge-expiring-week' : 'badge-expired'))}"
+                      th:text="${car.status}"
+                      style="padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; border: 1px solid;">
+                </span>
                 </td>
                 <td>
-                    <form th:action="@{/delete-car}" method="post" style="display:inline;">
+                    <form th:action="@{/delete-car}" method="post">
                         <input type="hidden" name="carId" th:value="${car.id}">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
@@ -64,7 +78,65 @@
             </tbody>
         </table>
     </div>
+    <hr style="margin: 2rem 0; border: 1px solid #eee;">
 
+    <div id="motUpdateSection" style="background-color: #eef2f7; padding: 1.5rem; border-radius: 8px; border: 1px solid #d1d9e6; margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; color: #2c3e50;">Update MOT Record</h3>
+        <form th:action="@{/add-mot-record}" method="post" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+                <label>Select Car:
+                    <select name="carId" required>
+                        <option value="" disabled selected>Choose a car...</option>
+                        <option th:each="car : ${cars}" th:value="${car.id}" th:text="${car.licensePlate}"></option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+                <label>Inspection Date:
+                    <input type="date" name="date" required>
+                </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 0.5; min-width: 100px;">
+                <label>Passed:
+                    <select name="passed">
+                        <option value="true">YES</option>
+                        <option value="false">NO</option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 2; min-width: 200px;">
+                <label>Notes:
+                    <input type="text" name="notes" placeholder="e.g. Brake pads replaced">
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="background-color: #27ae60; border-color: #27ae60;">Save Record</button>
+        </form>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(motHistory)}">
+        <h3 style="color: var(--text-color); margin-bottom: 1rem;">Recent MOT History</h3>
+        <table class="mot-table" style="background-color: #fff; font-size: 0.9rem;">
+            <thead style="background-color: #f1f1f1;">
+            <tr>
+                <th>Vehicle</th>
+                <th>Inspection Date</th>
+                <th>Result</th>
+                <th>Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="record : ${motHistory}">
+                <td th:text="${record.car.licensePlate}" style="font-weight: bold;"></td>
+                <td th:text="${#temporals.format(record.inspectionDate, 'dd.MM.yyyy')}"></td>
+                <td>
+                    <span th:if="${record.passed}" style="color: #27ae60; font-weight: bold;">✔ PASSED</span>
+                    <span th:unless="${record.passed}" style="color: #e74c3c; font-weight: bold;">✘ FAILED</span>
+                </td>
+                <td th:text="${record.notes}" style="font-style: italic; color: #666;"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div th:if="${#lists.isEmpty(cars)}" style="text-align: center; padding: 3rem 1rem; color: #6c757d; background-color: #f8f9fa; border-radius: 8px; border: 2px dashed var(--border-color);">
         <h3 style="margin-bottom: 0.5rem; color: var(--text-color);">Your garage is empty</h3>
         <p>Add your first car using the form above to start tracking its MOT.</p>

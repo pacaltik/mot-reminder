@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthController {
@@ -32,7 +34,8 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") UserRegisterDTO userRegisterDTO,
                                BindingResult bindingResult,
-                               Model model) {
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return "register";
@@ -40,8 +43,17 @@ public class AuthController {
 
         try {
             userService.registerUser(userRegisterDTO);
-            return "redirect:/";
+            // success
+            redirectAttributes.addFlashAttribute("successMessage", "Registration successful! You can now log in.");
+            return "redirect:/login";
+
+        } catch (DataIntegrityViolationException e) {
+            // email duplicity
+            model.addAttribute("error", "Error: An account with this email already exists!");
+            return "register";
+
         } catch (RuntimeException e) {
+            // other errors
             model.addAttribute("error", e.getMessage());
             return "register";
         }
