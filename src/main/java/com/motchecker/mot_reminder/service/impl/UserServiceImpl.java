@@ -8,6 +8,7 @@ import com.motchecker.mot_reminder.repository.UserRepository;
 import com.motchecker.mot_reminder.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,11 +17,13 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -32,6 +35,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userMapper.toEntity(userRegisterDTO);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepository.save(user);
         logger.info("New user registered successfully: {}", user.getEmail());
     }
@@ -41,7 +47,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email);
 
         // Business logic: Verify credentials
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             logger.info("User logged in successfully: {}", email);
             return user;
         }

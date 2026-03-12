@@ -59,7 +59,7 @@
 * The application uses environment variables for sensitive data. Configure them in your IDE or export them in your terminal before running:
     ```bash
     export DB_USERNAME=root
-    export DB_PASSWORD=root
+    export DB_PASSWORD=password
     export MAIL_USERNAME=mot.reminder.pacalt@seznam.cz
     export MAIL_PASSWORD=Pacaltik007
 
