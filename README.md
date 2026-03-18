@@ -61,7 +61,7 @@
     export DB_USERNAME=root
     export DB_PASSWORD=password
     export MAIL_USERNAME=mot.reminder.pacalt@seznam.cz
-    export MAIL_PASSWORD=Pacaltik007
+    export MAIL_PASSWORD=
 
 4. **Run the Application**
     ```bash

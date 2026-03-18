@@ -1,22 +1,31 @@
 package com.motchecker.mot_reminder.model;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.util.List;
-
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "cars")
+@Table(name = "cars", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "license_plate"})
+})
 @SQLDelete(sql = "UPDATE cars SET active = false WHERE id=?")
 @SQLRestriction("active = true")
-@SuppressWarnings("unused")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Car {
 
     @Id
@@ -24,79 +33,24 @@ public class Car {
     private Long id;
 
     @NotBlank(message = "License plate is required")
-    // Regex
-    @Pattern(regexp = "^[A-Z0-9][A-Z0-9 \\-]{3,8}[A-Z0-9]$", message = "Invalid format. Use uppercase letters, numbers, spaces, or dashes (e.g., 1A1 1234)")
-    @Column(name = "license_plate", nullable = false, unique = true)
+    @Pattern(regexp = "^(([ABCDEFHIJKLMNPRSTUVXYZ]|[0-9])-?){5,8}$", message = "Invalid format. Check license plate.")
+    @Column(name = "license_plate", nullable = false)
     private String licensePlate;
 
     @NotNull(message = "Expiry date is required")
     @FutureOrPresent(message = "Expiry date must be today or in the future")
-    @Column(nullable = false)
+    @Column(name = "mot_expiry_date", nullable = false)
     private LocalDate motExpiryDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // link to the owner of the car
+    private User user;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean active = true;
 
-    @Enumerated(EnumType.STRING)
-
-    // 1:N
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<MotRecord> motHistory = new java.util.ArrayList<>();
-
-    // Constructors
-    public Car() {
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLicensePlate() {
-        return licensePlate;
-    }
-
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
-    }
-
-    public LocalDate getMotExpiryDate() {
-        return motExpiryDate;
-    }
-
-    public void setMotExpiryDate(LocalDate motExpiryDate) {
-        this.motExpiryDate = motExpiryDate;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public List<MotRecord> getMotHistory() {
-        return motHistory;
-    }
-
-    public void setMotHistory(List<MotRecord> motHistory) {
-        this.motHistory = motHistory;
-    }
+    @Builder.Default
+    private List<MotRecord> motHistory = new ArrayList<>();
 }

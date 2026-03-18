@@ -9,5 +9,6 @@ public interface CarService {
     void addCar(CarRequestDTO carRequestDTO, Long userId);
     void deleteCar(Long carId, Long userId);
     void addMotRecord(Long carId, LocalDate date, boolean passed, String notes);
+    void updateCarMotExpiry(Long carId, LocalDate newExpiryDate, Long userId);
     List<CarResponseDTO> getUserCars(Long userId);
 }

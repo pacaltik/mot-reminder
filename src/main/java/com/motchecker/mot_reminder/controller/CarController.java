@@ -43,7 +43,7 @@ public class CarController {
         // input error
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Invalid input data. Please check your form.");
-            return "redirect:/dashboard"; // Vracíme ho zpět na dashboard s chybou
+            return "redirect:/dashboard";
         }
 
         try {
@@ -58,6 +58,24 @@ public class CarController {
 
         } catch (RuntimeException e) {
             // other errors
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
+        }
+
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping("/update-car-expiry")
+    public String updateCarExpiry(@RequestParam Long carId,
+                                  @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate newExpiryDate,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/login";
+
+        try {
+            carService.updateCarMotExpiry(carId, newExpiryDate, user.getId());
+            redirectAttributes.addFlashAttribute("successMessage", "Car expiry updated successfully!");
+        } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
         }
 

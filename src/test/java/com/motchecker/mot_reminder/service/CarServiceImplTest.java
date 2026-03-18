@@ -5,6 +5,7 @@ import com.motchecker.mot_reminder.mapper.CarMapper;
 import com.motchecker.mot_reminder.model.Car;
 import com.motchecker.mot_reminder.model.User;
 import com.motchecker.mot_reminder.repository.CarRepository;
+import com.motchecker.mot_reminder.repository.MotRecordRepository;
 import com.motchecker.mot_reminder.repository.UserRepository;
 import com.motchecker.mot_reminder.service.impl.CarServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CarServiceImplTest {
+
+    @Mock
+    private MotRecordRepository motRecordRepository;
 
     @Mock
     private CarRepository carRepository;
@@ -47,8 +51,10 @@ class CarServiceImplTest {
 
         Car mockCar = new Car(); // fake car
         mockCar.setLicensePlate("1A1 1111");
+        mockCar.setUser(mockUser);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+        when(carRepository.findByLicensePlateAndUserIdIgnoringActive(anyString(), eq(1L))).thenReturn(Optional.empty());
         when(carMapper.toEntity(any(CarRequestDTO.class))).thenReturn(mockCar);
 
         // Act
