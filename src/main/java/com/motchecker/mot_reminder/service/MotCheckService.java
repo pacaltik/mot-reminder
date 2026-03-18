@@ -2,13 +2,13 @@ package com.motchecker.mot_reminder.service;
 
 import com.motchecker.mot_reminder.model.Car;
 import com.motchecker.mot_reminder.repository.CarRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import java.time.LocalDate;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class MotCheckService {
@@ -16,11 +16,14 @@ public class MotCheckService {
     private static final Logger logger = LoggerFactory.getLogger(MotCheckService.class);
 
 
-    @Autowired
-    private CarRepository carRepository;
+    private final CarRepository carRepository;
 
-    @Autowired 
-    private EmailService emailService;
+    private final EmailService emailService;
+
+    public MotCheckService(CarRepository carRepository, EmailService emailService) {
+        this.carRepository = carRepository;
+        this.emailService = emailService;
+    }
 
     // "0 * * * * *" = run every minute (for testing)
     // "0 0 9 * * *" = run every day at 9:00 AM (for real app)

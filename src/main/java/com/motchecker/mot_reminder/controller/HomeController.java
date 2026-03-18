@@ -1,4 +1,4 @@
-package com.motchecker.mot_reminder;
+package com.motchecker.mot_reminder.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

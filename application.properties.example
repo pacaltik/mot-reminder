@@ -1,0 +1,4 @@
+DB_USERNAME=root;
+DB_PASSWORD=root;
+MAIL_USERNAME=mot.reminder.pacalt@seznam.cz;
+MAIL_PASSWORD=Pacaltik007
