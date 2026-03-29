@@ -50,13 +50,13 @@
    git clone [https://github.com/pacaltik/mot-reminder.git](https://github.com/pacaltik/mot-reminder.git)
    cd mot-reminder
 
-2. **Start the Database**
-* Ensure Docker is running and start the MySQL container:
+2. **Start the application and database**
     ```bash
-   docker run --name mot-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=mot_reminder_db -p 3306:3306 -d mysql:8.0
-
-3. **Environment Variables**
+    docker-compose up --build -d
+  
+3. **Environment Variables (or just edit this in docker-compose.yml)**
 * The application uses environment variables for sensitive data. Configure them in your IDE or export them in your terminal before running:
+* Password isn't written here for security reasons - email me!
     ```bash
     export DB_USERNAME=root
     export DB_PASSWORD=password
@@ -65,4 +65,13 @@
 
 4. **Run the Application**
     ```bash
-   mvn spring-boot:run
+   http://localhost:8080
+   
+5. ** ## For Development (Using IntelliJ IDEA) ## **
+* Ensure you have a running MySQL instance (or use the provided docker-compose.yml just for the DB).
+* Create an environment variable configuration in your IDE:
+
+      DB_USERNAME=root
+      DB_PASSWORD=password
+
+* Run the MotReminderApplication.java main class.
