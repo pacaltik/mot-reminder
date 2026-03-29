@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -22,6 +23,16 @@ public class GlobalExceptionHandler {
     public String handleGeneralException(Exception ex, Model model) {
         logger.error("An unexpected error occurred: ", ex);
         model.addAttribute("errorMessage", "Oops! Something went wrong on our end. Please try again later.");
+        return "error-page";
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public String handleResourceNotFound(NoResourceFoundException ex) {
+        // 404 is error
+        // BUUUUT only silent one !
+        logger.warn("Resource not found (404): " + ex.getResourcePath());
+
+        // route to error page (or bring back 404)
         return "error-page";
     }
 }

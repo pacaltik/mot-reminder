@@ -107,20 +107,28 @@
     <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 2rem;">
         <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--text-color);">Add New Car</h3>
 
-        <form th:action="@{/add-car}" method="post" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
-                <label>License Plate:
-                <input type="text" name="licensePlate" placeholder="e.g. 1A2 3456" required>
-                </label>
-                <small style="color: #666;">Format: 5-8 chars (A-Z, 0-9)</small>
+        <form th:action="@{/add-car}" method="post" style="display: flex; gap: 1rem; align-items: stretch; flex-wrap: wrap;">
+
+            <div style="display: flex; flex-direction: column; flex: 1; min-width: 200px;">
+                <label style="margin-bottom: 5px; font-weight: bold;">License Plate:</label>
+                <input type="text" name="licensePlate" placeholder="e.g. 1A2 3456" required class="form-control" style="flex-grow: 1;">
+                <small style="color: #666; margin-top: 5px;">Format: 5-8 chars (A-Z, 0-9)</small>
             </div>
-            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
-                <label>MOT Expiry Date:
-                <input type="date" name="motExpiryDate" required>
-                </label>
-                <small style="color: #666;">Must be today or future</small>
+
+            <div style="display: flex; flex-direction: column; flex: 1; min-width: 200px;">
+                <label style="margin-bottom: 5px; font-weight: bold;">MOT Expiry Date:</label>
+                <input type="date" name="motExpiryDate" required class="form-control" style="flex-grow: 1;">
+                <small style="color: #666; margin-top: 5px;">Must be today or future</small>
             </div>
-            <button type="submit" class="btn btn-primary" style="height: 45px;">Add Car</button>
+
+            <div style="display: flex; flex-direction: column; min-width: 150px;">
+                <label style="margin-bottom: 5px; visibility: hidden;">Action:</label>
+
+                <button type="submit" class="btn btn-primary" style="flex-grow: 1; margin: 0;">Add Car</button>
+
+                <small style="margin-top: 5px; visibility: hidden;">Spacer</small>
+            </div>
+
         </form>
     </div>
 

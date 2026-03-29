@@ -207,8 +207,8 @@ input:focus {
     font-weight: bold;
 }
 .badge-valid { background-color: #d1e7dd; color: #0f5132; }
-.badge-expiring-month { background-color: #ffe8cc; color: #c05621; } /* Orange for month */
-.badge-expiring-week { background-color: #fff3cd; color: #856404; } /* Yellow for week */
+.badge-expiring-week { background-color: #ffe8cc; color: #c05621; }
+.badge-expiring-month { background-color: #fff3cd; color: #856404; }
 .badge-expired { background-color: #f8d7da; color: #842029; }
 
 /* errors */
