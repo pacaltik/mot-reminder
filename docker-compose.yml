@@ -15,7 +15,8 @@ services:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -ppassword || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
+      start_period: 180s
 
   # 2. Spring Boot
   app:
