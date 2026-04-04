@@ -3,6 +3,7 @@ services:
   db:
     image: mysql:8.0
     container_name: mot-mysql
+    command: --innodb-use-native-aio=0
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: mot_reminder_db
