@@ -13,10 +13,10 @@ services:
     volumes:
       - db_data:/var/lib/mysql # storing data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-upassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppassword"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 10
 
   # 2. Spring Boot
   app:
