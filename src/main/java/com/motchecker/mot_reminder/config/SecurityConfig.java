@@ -23,7 +23,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // We disable CSRF protection (for simplicity on local)
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll() // We allow access everywhere, you control it yourself in Controllers
                 );

@@ -47,12 +47,12 @@
 
 1. **Clone the repository**
    ```bash
-   git clone [https://github.com/pacaltik/mot-reminder.git](https://github.com/pacaltik/mot-reminder.git)
+   git clone https://github.com/pacaltik/mot-reminder.git
    cd mot-reminder
 
 2. **Start the application and database**
     ```bash
-    docker-compose up --build -d
+    docker compose up --build -d
   
 3. **Environment Variables (or just edit this in docker-compose.yml)**
 * The application uses environment variables for sensitive data. Configure them in your IDE or export them in your terminal before running:
