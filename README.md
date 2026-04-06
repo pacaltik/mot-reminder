@@ -50,22 +50,22 @@
    git clone https://github.com/pacaltik/mot-reminder.git
    cd mot-reminder
 
-2. **Start the application and database**
+2. **Environment Variables (or just edit this in docker-compose.yml)**
+* The application uses environment variables for sensitive data. Configure them in your IDE or export them in your terminal before running:
+* PASSWORD ISN'T WRITTEN HERE FOR SECURITY REASONS - EMAIL ME!
+    ```bash
+    set DB_USERNAME=root
+    set DB_PASSWORD=password
+    set MAIL_USERNAME=mot.reminder.pacalt@seznam.cz
+    set MAIL_PASSWORD=
+
+3. **Start the application and database**
     ```bash
     docker compose up --build -d
-  
-3. **Environment Variables (or just edit this in docker-compose.yml)**
-* The application uses environment variables for sensitive data. Configure them in your IDE or export them in your terminal before running:
-* Password isn't written here for security reasons - email me!
-    ```bash
-    export DB_USERNAME=root
-    export DB_PASSWORD=password
-    export MAIL_USERNAME=mot.reminder.pacalt@seznam.cz
-    export MAIL_PASSWORD=
 
 4. **Run the Application**
     ```bash
-   http://localhost:8080
+    http://localhost:8080
    
 5. ** ## For Development (Using IntelliJ IDEA) ## **
 * Ensure you have a running MySQL instance (or use the provided docker-compose.yml just for the DB).
@@ -73,5 +73,7 @@
 
       DB_USERNAME=root
       DB_PASSWORD=password
+      MAIL_USERNAME=mot.reminder.pacalt@seznam.cz
+      MAIL_PASSWORD=
 
 * Run the MotReminderApplication.java main class.
